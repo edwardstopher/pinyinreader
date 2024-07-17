@@ -25,16 +25,43 @@
             word-wrap: break-word;
         }
         ruby {
-            font-size: 24px;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
         rt {
-            font-size: 12px;
             color: #666;
+            text-align: center;
+            width: 100%;
+        }
+        .settings {
+            margin-bottom: 20px;
+        }
+        .settings label {
+            display: inline-block;
+            width: 200px;
+            margin-right: 10px;
+        }
+        .settings input {
+            width: 50px;
         }
     </style>
 </head>
 <body>
     <h1>Chinese Reading Aid</h1>
+    
+    <div class="settings">
+        <label for="chineseSize">Chinese Character Size (px):</label>
+        <input type="number" id="chineseSize" value="24" min="8" max="72" onchange="updateStyles()"><br>
+        
+        <label for="pinyinSize">Pinyin Size (px):</label>
+        <input type="number" id="pinyinSize" value="12" min="8" max="36" onchange="updateStyles()"><br>
+        
+        <label for="characterSpacing">Character Spacing (px):</label>
+        <input type="number" id="characterSpacing" value="0" min="0" max="50" onchange="updateStyles()">
+    </div>
+    
     <textarea id="input" placeholder="Enter Chinese text here..."></textarea>
     <button onclick="generateReadingAid()">Generate Reading Aid</button>
     <div id="output-container"></div>
@@ -44,12 +71,10 @@
             const input = document.getElementById('input').value;
             const output = document.getElementById('output-container');
             
-            // Split the input into lines
             const lines = input.split('\n');
             
             let result = '';
             for (let line of lines) {
-                // Use the pinyin-pro library to convert all Chinese characters to pinyin with tone marks
                 const pinyinText = pinyinPro.pinyin(line, { toneType: 'symbol', type: 'array' });
                 
                 for (let i = 0; i < line.length; i++) {
@@ -59,11 +84,41 @@
                         result += line[i];
                     }
                 }
-                result += '\n'; // Add a line break after each line
+                result += '\n';
             }
             
             output.innerHTML = result;
+            updateStyles();
         }
+
+        function updateStyles() {
+            const chineseSize = document.getElementById('chineseSize').value;
+            const pinyinSize = document.getElementById('pinyinSize').value;
+            const characterSpacing = document.getElementById('characterSpacing').value;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                #output-container ruby {
+                    font-size: ${chineseSize}px;
+                    margin-right: ${characterSpacing}px;
+                }
+                #output-container rt {
+                    font-size: ${pinyinSize}px;
+                }
+            `;
+            
+            // Remove any existing dynamic style
+            const existingStyle = document.getElementById('dynamic-style');
+            if (existingStyle) {
+                existingStyle.remove();
+            }
+            
+            style.id = 'dynamic-style';
+            document.head.appendChild(style);
+        }
+
+        // Initialize styles
+        updateStyles();
     </script>
 </body>
 </html>
