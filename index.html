@@ -3,51 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chinese Reading Aid</title>
+    <title>Chinese Reader</title>
     <script src="https://cdn.jsdelivr.net/npm/pinyin-pro@3.18.2/dist/index.js"></script>
     <style>
-        :root {
-            --bg-color: #ffffff;
-            --text-color: #333333;
-            --border-color: #cccccc;
-            --input-bg-color: #ffffff;
-            --pinyin-color: #666666;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-color: #1a1a1a;
-                --text-color: #ffffff;
-                --border-color: #444444;
-                --input-bg-color: #2a2a2a;
-                --pinyin-color: #bbbbbb;
-            }
-        }
-
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            max-width: 600px;
             margin: 0 auto;
             padding: 20px;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: #f0f2f5;
         }
-        textarea, input, button {
-            background-color: var(--input-bg-color);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+        h1 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+        p {
+            margin-top: 0;
+            color: #666;
+            font-size: 14px;
         }
         textarea {
             width: 100%;
-            height: 150px;
+            height: 100px;
             margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #357ae8;
         }
         #output-container {
-            border: 1px solid var(--border-color);
-            padding: 10px;
             margin-top: 20px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
+            font-size: 24px;
         }
         ruby {
             display: inline-flex;
@@ -56,71 +62,113 @@
             text-align: center;
         }
         rt {
-            color: var(--pinyin-color);
+            font-size: 12px;
+            color: #666;
             text-align: center;
-            width: 100%;
         }
-        .settings {
-            margin-bottom: 20px;
+        #display-options {
+            display: none;
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
         }
-        .settings label {
-            display: inline-block;
-            width: 200px;
-            margin-right: 10px;
+        #display-options summary {
+            cursor: pointer;
+            color: #4a90e2;
         }
-        .settings input {
-            width: 50px;
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .option-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .option-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .option-controls {
+            display: flex;
+            align-items: center;
+        }
+        .option-controls button {
+            width: 30px;
+            height: 30px;
+            font-size: 18px;
+            padding: 0;
+            margin: 0 5px;
         }
     </style>
 </head>
 <body>
-    <h1>Chinese Reading Aid</h1>
-    
-    <div class="settings">
-        <label for="chineseSize">Chinese Character Size (px):</label>
-        <input type="number" id="chineseSize" value="24" min="8" max="72" onchange="updateStyles()"><br>
+    <div class="container">
+        <h1>Chinese Reader</h1>
+        <p>Easily annotate Chinese text with Pinyin</p>
         
-        <label for="pinyinSize">Pinyin Size (px):</label>
-        <input type="number" id="pinyinSize" value="12" min="8" max="36" onchange="updateStyles()"><br>
+        <textarea id="input" placeholder="Enter Chinese text"></textarea>
+        <button onclick="generateReadingAid()">Annotate</button>
         
-        <label for="characterSpacing">Character Spacing (px):</label>
-        <input type="number" id="characterSpacing" value="0" min="0" max="50" onchange="updateStyles()">
+        <div id="output-container"></div>
+        
+        <details id="display-options">
+            <summary>Display options</summary>
+            <div class="options-grid">
+                <div class="option-column">
+                    <span class="option-label">Chinese text</span>
+                    <div class="option-controls">
+                        <button onclick="adjustSize('chinese', -1)">-</button>
+                        <button onclick="adjustSize('chinese', 1)">+</button>
+                    </div>
+                </div>
+                <div class="option-column">
+                    <span class="option-label">Pinyin</span>
+                    <div class="option-controls">
+                        <button onclick="adjustSize('pinyin', -1)">-</button>
+                        <button onclick="adjustSize('pinyin', 1)">+</button>
+                    </div>
+                </div>
+                <div class="option-column">
+                    <span class="option-label">Spacing</span>
+                    <div class="option-controls">
+                        <button onclick="adjustSpacing(-1)">-</button>
+                        <button onclick="adjustSpacing(1)">+</button>
+                    </div>
+                </div>
+            </div>
+        </details>
     </div>
-    
-    <textarea id="input" placeholder="Enter Chinese text here..."></textarea>
-    <button onclick="generateReadingAid()">Generate Reading Aid</button>
-    <div id="output-container"></div>
 
     <script>
+        let chineseSize = 24;
+        let pinyinSize = 12;
+        let characterSpacing = 0;
+
         function generateReadingAid() {
             const input = document.getElementById('input').value;
             const output = document.getElementById('output-container');
             
-            const lines = input.split('\n');
+            const pinyinText = pinyinPro.pinyin(input, { toneType: 'symbol', type: 'array' });
             
             let result = '';
-            for (let line of lines) {
-                const pinyinText = pinyinPro.pinyin(line, { toneType: 'symbol', type: 'array' });
-                
-                for (let i = 0; i < line.length; i++) {
-                    if (/[\u4e00-\u9fa5]/.test(line[i])) {
-                        result += `<ruby>${line[i]}<rt>${pinyinText[i]}</rt></ruby>`;
-                    } else {
-                        result += line[i];
-                    }
+            for (let i = 0; i < input.length; i++) {
+                if (/[\u4e00-\u9fa5]/.test(input[i])) {
+                    result += `<ruby>${input[i]}<rt>${pinyinText[i]}</rt></ruby>`;
+                } else {
+                    result += input[i];
                 }
-                result += '\n';
             }
             
             output.innerHTML = result;
             updateStyles();
+            showDisplayOptions();
         }
 
         function updateStyles() {
-            const chineseSize = document.getElementById('chineseSize').value;
-            const pinyinSize = document.getElementById('pinyinSize').value;
-            const characterSpacing = document.getElementById('characterSpacing').value;
-            
             const style = document.createElement('style');
             style.textContent = `
                 #output-container ruby {
@@ -132,7 +180,6 @@
                 }
             `;
             
-            // Remove any existing dynamic style
             const existingStyle = document.getElementById('dynamic-style');
             if (existingStyle) {
                 existingStyle.remove();
@@ -142,16 +189,26 @@
             document.head.appendChild(style);
         }
 
+        function adjustSize(type, change) {
+            if (type === 'chinese') {
+                chineseSize = Math.max(8, Math.min(72, chineseSize + change));
+            } else if (type === 'pinyin') {
+                pinyinSize = Math.max(8, Math.min(36, pinyinSize + change));
+            }
+            updateStyles();
+        }
+
+        function adjustSpacing(change) {
+            characterSpacing = Math.max(0, Math.min(50, characterSpacing + change));
+            updateStyles();
+        }
+
+        function showDisplayOptions() {
+            document.getElementById('display-options').style.display = 'block';
+        }
+
         // Initialize styles
         updateStyles();
-
-        // Listen for system theme changes
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-            document.body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
-            setTimeout(() => {
-                document.body.style.transition = '';
-            }, 300);
-        });
     </script>
 </body>
 </html>
