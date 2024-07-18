@@ -37,6 +37,7 @@
             border-radius: 4px;
             padding: 10px;
             font-size: 16px;
+            box-sizing: border-box;
         }
         button {
             background-color: #4a90e2;
@@ -113,8 +114,6 @@
         <textarea id="input" placeholder="Enter Chinese text"></textarea>
         <button onclick="generateReadingAid()">Annotate</button>
         
-        <div id="output-container"></div>
-        
         <details id="display-options">
             <summary>Display options</summary>
             <div class="options-grid">
@@ -141,6 +140,8 @@
                 </div>
             </div>
         </details>
+        
+        <div id="output-container"></div>
     </div>
 
     <script>
