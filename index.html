@@ -3,12 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chinese Reader</title>
+    <title>Chinese Reader: Learn Chinese with Pinyin Annotation Tool</title>
+    <meta name="description" content="Improve your Chinese reading skills with our free online Chinese Reader. Easily annotate Chinese text with Pinyin and customize display options for better learning.">
+    <meta name="keywords" content="Chinese reader, Pinyin annotation, learn Chinese, Chinese text tool, Chinese language learning">
+    <link rel="canonical" href="https://www.example.com/chinese-reader">
+    <meta name="robots" content="index, follow">
     <script src="https://cdn.jsdelivr.net/npm/pinyin-pro@3.18.2/dist/index.js"></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Chinese Reader with Pinyin Annotation",
+      "url": "https://www.example.com/chinese-reader",
+      "description": "An online tool to annotate Chinese text with Pinyin, helping learners improve their Chinese reading skills.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0"
+      }
+    }
+    </script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
             background-color: #f0f2f5;
@@ -108,11 +127,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>Chinese Reader</h1>
-        <p>Easily annotate Chinese text with Pinyin</p>
+        <h1>Chinese Reader: Learn Chinese with Pinyin Annotation</h1>
+        <p>Improve your Chinese reading skills with our free online Chinese Reader. Easily annotate Chinese text with Pinyin and customize display options for better learning.</p>
         
-        <textarea id="input" placeholder="Enter Chinese text"></textarea>
-        <button onclick="generateReadingAid()">Annotate</button>
+        <textarea id="input" placeholder="Enter Chinese text here to get Pinyin annotation"></textarea>
+        <button onclick="generateReadingAid()">Annotate with Pinyin</button>
         
         <details id="display-options">
             <summary>Display options</summary>
@@ -143,6 +162,19 @@
         
         <div id="output-container"></div>
     </div>
+
+    <footer>
+        <h2>About Our Chinese Reader Tool</h2>
+        <p>Our Chinese Reader is designed to help language learners improve their Chinese reading skills. By providing Pinyin annotations for Chinese text, it bridges the gap between character recognition and pronunciation, making it easier for learners to read and understand Chinese content.</p>
+        <h3>Key Features:</h3>
+        <ul>
+            <li>Instant Pinyin annotation for any Chinese text</li>
+            <li>Customizable display options for text size and spacing</li>
+            <li>User-friendly interface suitable for learners of all levels</li>
+            <li>Free to use, with no registration required</li>
+        </ul>
+        <p>Whether you're a beginner just starting to learn Chinese characters or an advanced learner looking to improve your reading fluency, our Chinese Reader tool is here to support your language learning journey.</p>
+    </footer>
 
     <script>
         let chineseSize = 24;
@@ -210,6 +242,14 @@
 
         // Initialize styles
         updateStyles();
+
+        // Add event listener for Shift+Enter
+        document.getElementById('input').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && event.shiftKey) {
+                event.preventDefault(); // Prevent default behavior (new line)
+                generateReadingAid(); // Call the function to generate reading aid
+            }
+        });
     </script>
 </body>
 </html>
