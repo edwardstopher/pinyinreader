@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,10 @@
     <meta name="keywords" content="PinyinMe, Chinese reader, Pinyin annotation, learn Chinese, Chinese text tool, Chinese language learning">
     <link rel="canonical" href="https://www.example.com/pinyinme">
     <meta name="robots" content="index, follow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/pinyin-pro@3.18.2/dist/index.js"></script>
+    <script defer src="/_vercel/insights/script.js"></script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -26,109 +29,369 @@
     </script>
     <style>
         :root {
-            --bg-color: #121212;
-            --text-color: #ffffff;
-            --input-bg: #1e1e1e;
-            --input-border: #333333;
-            --button-bg: #4a90e2;
-            --button-hover: #357ae8;
-            --pinyin-color: #aaaaaa;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+            --transition: 0.2s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f0f0f;
+            --surface: #1a1a1a;
+            --surface-2: #242424;
+            --border: #2e2e2e;
+            --text: #f0f0f0;
+            --text-muted: #888;
+            --accent: #6c8eff;
+            --accent-hover: #5a7bff;
+            --accent-subtle: rgba(108, 142, 255, 0.12);
+            --pinyin: #6c8eff;
+            --shadow: 0 4px 24px rgba(0,0,0,0.4);
+        }
+
+        [data-theme="light"] {
+            --bg: #f5f5f7;
+            --surface: #ffffff;
+            --surface-2: #f0f0f2;
+            --border: #e0e0e0;
+            --text: #111;
+            --text-muted: #888;
+            --accent: #3a5ff0;
+            --accent-hover: #2a4fe0;
+            --accent-subtle: rgba(58, 95, 240, 0.08);
+            --pinyin: #3a5ff0;
+            --shadow: 0 4px 24px rgba(0,0,0,0.08);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            max-width: 800px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background-color var(--transition), color var(--transition);
+        }
+
+        /* Layout */
+        .page {
+            max-width: 720px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            padding: 24px 20px 60px;
         }
 
-        .container {
-            background-color: var(--bg-color);
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-        }
-
-        h1 {
-            margin-top: 0;
-            margin-bottom: 5px;
-            font-size: 32px;
-        }
-
-        .subtitle {
-            font-size: 16px;
-            color: var(--pinyin-color);
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
-
-        .sample-container {
+        /* Header */
+        header {
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
+            justify-content: space-between;
+            margin-bottom: 36px;
         }
 
-        .sample-label {
-            margin-right: 10px;
-            font-size: 14px;
-            color: var(--pinyin-color);
-        }
-
-        .sample-bar {
+        .logo {
             display: flex;
-            justify-content: flex-start;
+            align-items: baseline;
+            gap: 8px;
         }
 
-        .sample-button {
-            background-color: var(--input-bg);
-            color: var(--text-color);
-            border: 1px solid var(--input-border);
-            border-radius: 20px;
-            padding: 5px 10px;
-            margin-right: 10px;
-            font-size: 14px;
+        .logo h1 {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .logo .tagline {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-full);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            transition: background-color 0.3s;
+            color: var(--text-muted);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+            font-size: 16px;
+            flex-shrink: 0;
         }
 
-        .sample-button:hover {
-            background-color: var(--button-bg);
+        .theme-toggle:hover {
+            background: var(--accent-subtle);
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* Card */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: background var(--transition), border-color var(--transition);
+        }
+
+        /* Samples */
+        .samples {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .samples-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sample-btn {
+            background: var(--surface-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-full);
+            padding: 5px 12px;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background var(--transition), border-color var(--transition), color var(--transition);
+        }
+
+        .sample-btn:hover {
+            background: var(--accent-subtle);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Textarea */
+        .input-wrap {
+            position: relative;
+            margin-bottom: 14px;
         }
 
         textarea {
             width: 100%;
-            height: 100px;
-            margin-bottom: 10px;
-            border: 1px solid var(--input-border);
-            border-radius: 4px;
-            padding: 10px;
+            height: 110px;
+            padding: 14px;
             font-size: 16px;
-            box-sizing: border-box;
-            background-color: var(--input-bg);
-            color: var(--text-color);
+            font-family: inherit;
+            background: var(--surface-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            resize: vertical;
+            outline: none;
+            transition: border-color var(--transition), background var(--transition);
+            line-height: 1.6;
         }
 
-        button {
-            background-color: var(--button-bg);
-            color: white;
+        textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .input-hint {
+            position: absolute;
+            bottom: 10px;
+            right: 12px;
+            font-size: 11px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        /* Annotate button */
+        .annotate-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent);
+            color: #fff;
             border: none;
-            border-radius: 4px;
-            padding: 10px 15px;
-            font-size: 16px;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 500;
+            font-family: inherit;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background var(--transition), transform 0.1s;
         }
 
-        button:hover {
-            background-color: var(--button-hover);
+        .annotate-btn:hover {
+            background: var(--accent-hover);
         }
 
-        #output-container {
-            margin-top: 20px;
+        .annotate-btn:active {
+            transform: scale(0.99);
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 22px 0;
+        }
+
+        /* Display options */
+        .options-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .options-toggle-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .options-toggle-icon {
+            font-size: 11px;
+            color: var(--text-muted);
+            transition: transform var(--transition);
+        }
+
+        .options-toggle-icon.open {
+            transform: rotate(180deg);
+        }
+
+        .options-body {
+            display: none;
+            margin-top: 16px;
+        }
+
+        .options-body.open {
+            display: block;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        @media (min-width: 480px) {
+            .options-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .option-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .option-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stepper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stepper-btn {
+            width: 28px;
+            height: 28px;
+            background: var(--surface-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background var(--transition), border-color var(--transition);
+            padding: 0;
+        }
+
+        .stepper-btn:hover {
+            background: var(--accent-subtle);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Segmented control */
+        .segmented {
+            display: flex;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .segmented button {
+            flex: 1;
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        .segmented button.active {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .segmented button:not(.active):hover {
+            background: var(--accent-subtle);
+            color: var(--accent);
+        }
+
+        /* Output */
+        .output-container {
+            margin-top: 28px;
+        }
+
+        .output-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 14px;
+        }
+
+        .output-body {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
             font-size: 24px;
-            line-height: 1.5;
+            line-height: 2.2;
+            box-shadow: var(--shadow);
+            transition: background var(--transition), border-color var(--transition);
         }
 
         ruby {
@@ -144,134 +407,92 @@
 
         rt {
             font-size: 0.5em;
-            color: var(--pinyin-color);
+            color: var(--pinyin);
             text-align: center;
             line-height: 1;
             margin: 0;
         }
 
-        #display-options {
-            margin-top: 20px;
-            border-top: 1px solid var(--input-border);
-            padding-top: 20px;
-        }
-
-        #display-options summary {
-            cursor: pointer;
-            color: var(--button-bg);
-        }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .option-column {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .option-label {
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 48px;
             font-size: 12px;
-            color: var(--pinyin-color);
-            margin-bottom: 5px;
-        }
-
-        .option-controls {
-            display: flex;
-            align-items: center;
-        }
-
-        .option-controls button {
-            width: 30px;
-            height: 30px;
-            font-size: 18px;
-            padding: 0;
-            margin: 0 5px;
-        }
-
-        .segmented-control {
-            display: flex;
-            border: 1px solid var(--button-bg);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .segmented-control button {
-            flex: 1;
-            background-color: var(--bg-color);
-            color: var(--button-bg);
-            border: none;
-            padding: 5px 10px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .segmented-control button.active {
-            background-color: var(--button-bg);
-            color: white;
-        }
-
-        .segmented-control button:not(:last-child) {
-            border-right: 1px solid var(--button-bg);
+            color: var(--text-muted);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>PinyinMe</h1>
-        <p class="subtitle">Enhance your Chinese reading skills with instant Pinyin annotations</p>
-        
-        <div class="sample-container">
-            <span class="sample-label">Try a sample:</span>
-            <div class="sample-bar">
-                <button class="sample-button" onclick="setSample('我想学中文')">我想学中文</button>
-                <button class="sample-button" onclick="setSample('拼音帮助你发音汉字')">拼音帮助你发音汉字</button>
+    <div class="page">
+        <header>
+            <div class="logo">
+                <h1>PinyinMe</h1>
+                <span class="tagline">Chinese Pinyin Annotator</span>
+            </div>
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" title="Toggle light/dark mode">🌙</button>
+        </header>
+
+        <div class="card">
+            <div class="samples">
+                <span class="samples-label">Try</span>
+                <button class="sample-btn" onclick="setSample('我想学中文')">我想学中文</button>
+                <button class="sample-btn" onclick="setSample('拼音帮助你发音汉字')">拼音帮助你发音汉字</button>
+            </div>
+
+            <div class="input-wrap">
+                <textarea id="input" placeholder="Paste or type Chinese text here…"></textarea>
+                <span class="input-hint">Shift + Enter to annotate</span>
+            </div>
+
+            <button class="annotate-btn" onclick="generateReadingAid()">Annotate with Pinyin</button>
+
+            <div class="divider"></div>
+
+            <div class="options-toggle" onclick="toggleOptions()" id="options-toggle">
+                <span class="options-toggle-label">Display options</span>
+                <span class="options-toggle-icon" id="options-icon">▼</span>
+            </div>
+
+            <div class="options-body" id="options-body">
+                <div class="options-grid">
+                    <div class="option-item">
+                        <span class="option-label">Chinese size</span>
+                        <div class="stepper">
+                            <button class="stepper-btn" onclick="adjustSize('chinese', -2)">−</button>
+                            <button class="stepper-btn" onclick="adjustSize('chinese', 2)">+</button>
+                        </div>
+                    </div>
+                    <div class="option-item">
+                        <span class="option-label">Pinyin size</span>
+                        <div class="stepper">
+                            <button class="stepper-btn" onclick="adjustSize('pinyin', -2)">−</button>
+                            <button class="stepper-btn" onclick="adjustSize('pinyin', 2)">+</button>
+                        </div>
+                    </div>
+                    <div class="option-item">
+                        <span class="option-label">Spacing</span>
+                        <div class="stepper">
+                            <button class="stepper-btn" onclick="adjustSpacing(-2)">−</button>
+                            <button class="stepper-btn" onclick="adjustSpacing(2)">+</button>
+                        </div>
+                    </div>
+                    <div class="option-item">
+                        <span class="option-label">Pinyin position</span>
+                        <div class="segmented">
+                            <button onclick="setPinyinPosition(true)" id="above-button">Above</button>
+                            <button onclick="setPinyinPosition(false)" id="below-button" class="active">Below</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <textarea id="input" placeholder="Enter Chinese text here to get Pinyin annotation"></textarea>
-        <button onclick="generateReadingAid()">Annotate with Pinyin</button>
-        
-        <details id="display-options">
-            <summary>Display options</summary>
-            <div class="options-grid">
-                <div class="option-column">
-                    <span class="option-label">Chinese text</span>
-                    <div class="option-controls">
-                        <button onclick="adjustSize('chinese', -2)">-</button>
-                        <button onclick="adjustSize('chinese', 2)">+</button>
-                    </div>
-                </div>
-                <div class="option-column">
-                    <span class="option-label">Pinyin</span>
-                    <div class="option-controls">
-                        <button onclick="adjustSize('pinyin', -2)">-</button>
-                        <button onclick="adjustSize('pinyin', 2)">+</button>
-                    </div>
-                </div>
-                <div class="option-column">
-                    <span class="option-label">Spacing</span>
-                    <div class="option-controls">
-                        <button onclick="adjustSpacing(-2)">-</button>
-                        <button onclick="adjustSpacing(2)">+</button>
-                    </div>
-                </div>
-                <div class="option-column">
-                    <span class="option-label">Pinyin Position</span>
-                    <div class="segmented-control">
-                        <button onclick="setPinyinPosition(true)" id="above-button">Above</button>
-                        <button onclick="setPinyinPosition(false)" id="below-button" class="active">Below</button>
-                    </div>
-                </div>
-            </div>
-        </details>
-        
-        <div id="output-container"></div>
+
+        <div class="output-container" id="output-section" style="display:none">
+            <div class="output-label">Result</div>
+            <div class="output-body" id="output-container"></div>
+        </div>
+
+        <footer>PinyinMe &mdash; free tool for Chinese learners</footer>
     </div>
 
     <script>
@@ -280,6 +501,33 @@
         let characterSpacing = 0;
         let pinyinAbove = false;
 
+        // Theme
+        const html = document.documentElement;
+        const themeBtn = document.getElementById('theme-toggle');
+
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const savedTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+        setTheme(savedTheme);
+
+        function setTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            themeBtn.textContent = theme === 'dark' ? '🌙' : '☀️';
+            localStorage.setItem('theme', theme);
+        }
+
+        themeBtn.addEventListener('click', () => {
+            const current = html.getAttribute('data-theme');
+            setTheme(current === 'dark' ? 'light' : 'dark');
+        });
+
+        // Options toggle
+        function toggleOptions() {
+            const body = document.getElementById('options-body');
+            const icon = document.getElementById('options-icon');
+            const open = body.classList.toggle('open');
+            icon.classList.toggle('open', open);
+        }
+
         function setSample(text) {
             document.getElementById('input').value = text;
             generateReadingAid();
@@ -287,10 +535,13 @@
 
         function generateReadingAid() {
             const input = document.getElementById('input').value;
+            if (!input.trim()) return;
+
             const output = document.getElementById('output-container');
-            
+            const section = document.getElementById('output-section');
+
             const pinyinText = pinyinPro.pinyin(input, { toneType: 'symbol', type: 'array' });
-            
+
             let result = '';
             for (let i = 0; i < input.length; i++) {
                 if (/[\u4e00-\u9fa5]/.test(input[i])) {
@@ -299,33 +550,24 @@
                     result += input[i];
                 }
             }
-            
+
             output.innerHTML = result;
+            section.style.display = 'block';
             updateStyles();
-            document.getElementById('display-options').style.display = 'block';
         }
 
         function updateStyles() {
-            const style = document.createElement('style');
-            style.textContent = `
-                #output-container {
-                    font-size: ${chineseSize}px;
-                }
-                #output-container ruby {
-                    margin-right: ${characterSpacing}px;
-                }
-                #output-container rt {
-                    font-size: ${pinyinSize / chineseSize}em;
-                }
-            `;
-            
-            const existingStyle = document.getElementById('dynamic-style');
-            if (existingStyle) {
-                existingStyle.remove();
+            let style = document.getElementById('dynamic-style');
+            if (!style) {
+                style = document.createElement('style');
+                style.id = 'dynamic-style';
+                document.head.appendChild(style);
             }
-            
-            style.id = 'dynamic-style';
-            document.head.appendChild(style);
+            style.textContent = `
+                #output-container { font-size: ${chineseSize}px; }
+                #output-container ruby { margin-right: ${characterSpacing}px; }
+                #output-container rt { font-size: ${pinyinSize / chineseSize}em; }
+            `;
         }
 
         function adjustSize(type, change) {
@@ -349,14 +591,12 @@
             generateReadingAid();
         }
 
-        // Initialize styles
         updateStyles();
 
-        // Add event listener for Shift+Enter
-        document.getElementById('input').addEventListener('keydown', function(event) {
-            if (event.key === 'Enter' && event.shiftKey) {
-                event.preventDefault(); // Prevent default behavior (new line)
-                generateReadingAid(); // Call the function to generate reading aid
+        document.getElementById('input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.shiftKey) {
+                e.preventDefault();
+                generateReadingAid();
             }
         });
     </script>
