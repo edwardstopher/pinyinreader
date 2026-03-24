@@ -563,6 +563,8 @@
             for (let i = 0; i < input.length; i++) {
                 if (/[\u4e00-\u9fa5]/.test(input[i])) {
                     result += `<ruby class="${pinyinAbove ? 'pinyin-above' : ''}">${input[i]}<rt>${pinyinText[i]}</rt></ruby>`;
+                } else if (input[i] === '\n') {
+                    result += '<br>';
                 } else {
                     result += input[i];
                 }
