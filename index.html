@@ -331,6 +331,14 @@
             gap: 6px;
         }
 
+        .stepper-value {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            min-width: 28px;
+            text-align: center;
+        }
+
         .stepper-btn {
             width: 28px;
             height: 28px;
@@ -463,34 +471,33 @@
 
             <button class="annotate-btn" onclick="generateReadingAid()">Annotate with Pinyin</button>
 
-            <div class="divider"></div>
+        </div>
 
-            <div class="options-toggle" onclick="toggleOptions()" id="options-toggle">
-                <span class="options-toggle-label">Display options</span>
-                <span class="options-toggle-icon" id="options-icon">▼</span>
-            </div>
-
-            <div class="options-body" id="options-body">
+        <div class="output-container" id="output-section" style="display:none">
+            <div class="card" style="margin-bottom: 20px;">
                 <div class="options-grid">
                     <div class="option-item">
                         <span class="option-label">Chinese size</span>
                         <div class="stepper">
-                            <button class="stepper-btn" onclick="adjustSize('chinese', -2)">−</button>
-                            <button class="stepper-btn" onclick="adjustSize('chinese', 2)">+</button>
+                            <button class="stepper-btn" onclick="adjustSize('chinese', -1)">−</button>
+                            <span class="stepper-value" id="chinese-size-val">40</span>
+                            <button class="stepper-btn" onclick="adjustSize('chinese', 1)">+</button>
                         </div>
                     </div>
                     <div class="option-item">
                         <span class="option-label">Pinyin size</span>
                         <div class="stepper">
-                            <button class="stepper-btn" onclick="adjustSize('pinyin', -2)">−</button>
-                            <button class="stepper-btn" onclick="adjustSize('pinyin', 2)">+</button>
+                            <button class="stepper-btn" onclick="adjustSize('pinyin', -1)">−</button>
+                            <span class="stepper-value" id="pinyin-size-val">22</span>
+                            <button class="stepper-btn" onclick="adjustSize('pinyin', 1)">+</button>
                         </div>
                     </div>
                     <div class="option-item">
                         <span class="option-label">Spacing</span>
                         <div class="stepper">
-                            <button class="stepper-btn" onclick="adjustSpacing(-2)">−</button>
-                            <button class="stepper-btn" onclick="adjustSpacing(2)">+</button>
+                            <button class="stepper-btn" onclick="adjustSpacing(-1)">−</button>
+                            <span class="stepper-value" id="spacing-val">0</span>
+                            <button class="stepper-btn" onclick="adjustSpacing(1)">+</button>
                         </div>
                     </div>
                     <div class="option-item">
@@ -502,9 +509,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="output-container" id="output-section" style="display:none">
             <div class="output-label">Result</div>
             <div class="output-body" id="output-container"></div>
         </div>
@@ -513,8 +517,8 @@
     </div>
 
     <script>
-        let chineseSize = 24;
-        let pinyinSize = 12;
+        let chineseSize = 40;
+        let pinyinSize = 22;
         let characterSpacing = 0;
         let pinyinAbove = false;
 
@@ -537,12 +541,13 @@
             setTheme(current === 'dark' ? 'light' : 'dark');
         });
 
-        // Options toggle
-        function toggleOptions() {
-            const body = document.getElementById('options-body');
-            const icon = document.getElementById('options-icon');
-            const open = body.classList.toggle('open');
-            icon.classList.toggle('open', open);
+        function updateValueDisplays() {
+            const cs = document.getElementById('chinese-size-val');
+            const ps = document.getElementById('pinyin-size-val');
+            const sp = document.getElementById('spacing-val');
+            if (cs) cs.textContent = chineseSize;
+            if (ps) ps.textContent = pinyinSize;
+            if (sp) sp.textContent = characterSpacing;
         }
 
         function setSample(text) {
@@ -596,11 +601,13 @@
                 pinyinSize = Math.max(8, Math.min(36, pinyinSize + change));
             }
             updateStyles();
+            updateValueDisplays();
         }
 
         function adjustSpacing(change) {
             characterSpacing = Math.max(0, Math.min(50, characterSpacing + change));
             updateStyles();
+            updateValueDisplays();
         }
 
         function setPinyinPosition(above) {
