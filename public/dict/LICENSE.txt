@@ -1,0 +1,33 @@
+PinyinMe dictionary data
+========================
+
+This directory contains a derivative of CC-CEDICT.
+
+CC-CEDICT is published by MDBG and licensed under the
+Creative Commons Attribution-ShareAlike 4.0 International License.
+
+https://creativecommons.org/licenses/by-sa/4.0/
+https://www.mdbg.net/chinese/dictionary?page=cc-cedict
+
+Referenced work: CEDICT, copyright 1997, 1998 Paul Andrew Denisowski.
+
+The release used here is dated 2026-11-12 (125,408 entries).
+PinyinMe repacked the entries and added HSK levels and frequency ranks.
+That derivative stays under CC BY-SA 4.0. You may copy, share and adapt
+it under the same license, with attribution.
+
+HSK levels and frequency ranks are joined from
+drkameleon/complete-hsk-vocabulary (MIT License),
+commit 7ac65bf1a6387d35f1ade478906172a19311c7f9.
+
+- HSK 2.0 uses that project's old-* levels (the previous six-level lists).
+- HSK 3.0 uses that project's newest-* levels, the 2026 syllabus.
+  Band 7 covers levels 7–9.
+- Frequency ranks are the ranks published in that compilation.
+  They trace to the BCC/BLCU corpus list circulated with Pleco.
+
+Changes: entries were merged on simplified form, traditional form and
+pinyin; classifier notes were split out; HSK and frequency fields were
+added; the file was compressed.
+
+The PinyinMe application code is separate from this data.
