@@ -7,6 +7,7 @@ import { isWord, type WordToken } from "./pipeline/types";
 import { HSK_MAX, type StyleSettings } from "./model";
 import { chineseVoices, speakParts, stopSpeech, supportsSpeech } from "./speech";
 import { usePinyin } from "./state";
+import { sitePages } from "./content/site";
 import { About } from "./ui/About";
 import { DictBody } from "./ui/DictPanel";
 import { useDialog } from "./ui/dialog";
@@ -14,6 +15,17 @@ import { Editor } from "./ui/Editor";
 import { Library } from "./ui/Library";
 import { Reader } from "./ui/Reader";
 import { SettingsPanel } from "./ui/Settings";
+
+function PageLinks({ label }: { label: string }) {
+  const path = window.location.pathname.replace(/\/+$/, "") || "/";
+  return (
+    <nav className="site-links" aria-label={label}>
+      {sitePages.map((page) => (
+        <a key={page.path} href={page.path} aria-current={path === page.path ? "page" : undefined}>{page.nav}</a>
+      ))}
+    </nav>
+  );
+}
 
 function useMatch(query: string): boolean {
   const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
@@ -242,7 +254,7 @@ export function App() {
     <div className="app">
       <header className="top no-print">
         <div className="brand">
-          <p className="logo"><span aria-hidden="true">ā</span> PinyinMe</p>
+          <a className="logo" href="/"><span aria-hidden="true">ā</span> PinyinMe</a>
           <p className="tagline">Read Chinese</p>
         </div>
         <div className="script" role="group" aria-label="Script">
@@ -257,6 +269,7 @@ export function App() {
           <button type="button" onClick={() => { flushSync(() => setPrintMode(true)); window.print(); }}>Print</button>
           <button type="button" onClick={() => setAboutOpen(true)}>About</button>
         </nav>
+        <PageLinks label="Guides" />
       </header>
       <div className="ad-region" hidden data-ad-slot="reserved" />
       <div className={`workspace${panel ? " with-panel" : ""}`}>
@@ -357,6 +370,7 @@ export function App() {
         ) : null}
       </div>
       <footer className="foot no-print">
+        <PageLinks label="Pages" />
         <p>PinyinMe — free tool for Chinese learners. Dictionary: CC-CEDICT, CC BY-SA 4.0.</p>
       </footer>
       {popover && selectedToken && !panel ? (

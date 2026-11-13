@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { landingFor } from "./content/site";
 import { annotateText, describeWord, loadEngineDict, onEngineDict, onEngineStatus } from "./engine";
 import type { DictView } from "./dict/readings";
 import type { Correction, Token, WordToken } from "./pipeline/types";
@@ -73,6 +74,7 @@ export function Provider({ children }: { children: ReactNode }) {
   const pending = useRef<string | null>(null);
   const debounceRef = useRef(0);
   const generation = useRef(0);
+  const landingApplied = useRef(false);
   const docsRef = useRef(docs);
   docsRef.current = docs;
   const doc = docs.find((item) => item.id === docId) ?? null;
@@ -111,6 +113,40 @@ export function Provider({ children }: { children: ReactNode }) {
       setReady(true);
     });
   }, []);
+
+  useEffect(() => {
+    if (!ready || landingApplied.current) return;
+    const landing = landingFor(window.location.pathname);
+    const sample = landing?.sample;
+    if (!sample) return;
+    landingApplied.current = true;
+    const existing = docsRef.current.find((item) => item.id === sample.id);
+    if (existing) {
+      persistDoc({ ...existing, lastOpenedAt: Date.now() });
+      setDocId(existing.id);
+    } else {
+      const now = Date.now();
+      const created: Doc = {
+        id: sample.id,
+        title: sample.title,
+        titleAuto: false,
+        source: "PinyinMe sample",
+        text: sample.text,
+        createdAt: now,
+        updatedAt: now,
+        lastOpenedAt: now,
+        anchor: 0,
+        corrections: [],
+        revealed: [],
+      };
+      persistDoc(created);
+      setDocId(created.id);
+    }
+    if (sample.settings) {
+      const { print, ...rest } = sample.settings;
+      setSettings((current) => ({ ...current, ...rest, print: { ...current.print, ...print } }));
+    }
+  }, [ready, persistDoc]);
 
   useEffect(() => onEngineStatus(setDictStatus), []);
 

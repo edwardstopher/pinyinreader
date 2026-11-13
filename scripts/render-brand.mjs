@@ -21,7 +21,12 @@ const mark = (size) => `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
   span { font-family: "Liberation Serif", Georgia, serif; font-size: ${Math.round(size * 0.58)}px; line-height: 1; color: #fffdf9; }
 </style></head><body><span>ā</span></body></html>`;
 
-const card = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+function cardHtml({ title, sub, words }) {
+  const wordHtml = words.map((word) => {
+    const units = word.units.map((unit) => `<div class="unit"><span class="py t${unit.tone}">${unit.py}</span><span class="hz">${unit.hz}</span></div>`).join("");
+    return `<div class="word"><div class="units">${units}</div><p class="gloss">${word.gloss}</p></div>`;
+  }).join("");
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
   html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: #f7f4ee; color: #1d1a16; }
   body { font-family: "Liberation Sans", "Nimbus Sans", sans-serif; }
   .bar { position: absolute; inset: 0 auto 0 0; width: 18px; background: #9c2f1c; }
@@ -40,30 +45,31 @@ const card = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
   .gloss { margin: 8px 0 0; color: #5c564c; font-size: 20px; }
   .t2 { color: #8a4b00; }
   .t3 { color: #1b6b32; }
+  .t4 { color: #154a9a; }
 </style></head><body>
   <div class="bar"></div>
   <div class="wrap">
     <div class="brand"><span class="mark">ā</span><span class="name">PinyinMe</span></div>
-    <h1>Chinese to pinyin</h1>
-    <p class="sub">Definitions · HSK levels · simplified or traditional · print</p>
-    <div class="card">
-      <div class="word">
-        <div class="units">
-          <div class="unit"><span class="py t2">yín</span><span class="hz">银</span></div>
-          <div class="unit"><span class="py t2">háng</span><span class="hz">行</span></div>
-        </div>
-        <p class="gloss">银行 · bank</p>
-      </div>
-      <div class="word">
-        <div class="units">
-          <div class="unit"><span class="py t2">xíng</span><span class="hz">行</span></div>
-          <div class="unit"><span class="py t3">zǒu</span><span class="hz">走</span></div>
-        </div>
-        <p class="gloss">行走 · to walk</p>
-      </div>
-    </div>
+    <h1>${title}</h1>
+    <p class="sub">${sub}</p>
+    <div class="card">${wordHtml}</div>
   </div>
 </body></html>`;
+}
+
+const bank = { units: [{ py: "yín", hz: "银", tone: 2 }, { py: "háng", hz: "行", tone: 2 }], gloss: "银行 · bank" };
+const walk = { units: [{ py: "xíng", hz: "行", tone: 2 }, { py: "zǒu", hz: "走", tone: 3 }], gloss: "行走 · to walk" };
+const moon = { units: [{ py: "míng", hz: "明", tone: 2 }, { py: "yuè", hz: "月", tone: 4 }], gloss: "明月 · bright moon" };
+const tradBank = { units: [{ py: "yín", hz: "銀", tone: 2 }, { py: "háng", hz: "行", tone: 2 }], gloss: "銀行 · bank" };
+
+const cards = [
+  { file: "public/og-image.png", title: "Chinese to pinyin", sub: "Definitions · HSK levels · simplified or traditional · print", words: [bank, walk] },
+  { file: "public/og-chinese-to-pinyin.png", title: "Chinese to pinyin", sub: "A reading on each word, with tone marks", words: [bank, walk] },
+  { file: "public/og-pinyin-for-printing.png", title: "Print with pinyin", sub: "A reading handout, not a handwriting sheet", words: [moon, bank] },
+  { file: "public/og-hsk-pinyin.png", title: "HSK pinyin", sub: "Hide readings up to a level you choose", words: [bank, walk] },
+  { file: "public/og-traditional-chinese-pinyin.png", title: "Traditional characters", sub: "Pinyin for the text as written", words: [tradBank, walk] },
+  { file: "public/og-chinese-reader.png", title: "Reader and dictionary", sub: "Your text, with definitions when you ask", words: [bank, walk] },
+];
 
 function shot(html, file, width, height) {
   const htmlPath = join(dir, `${width}x${height}-${file.replace(/\W/g, "")}.html`);
@@ -109,14 +115,17 @@ function icoFromPngs(pngs) {
   return Buffer.concat([header, ...entries, ...pngs.map((png) => png.buffer)]);
 }
 
+const cardsOnly = process.argv.includes("cards");
 const jobs = [
-  { html: card, file: join(root, "public/og-image.png"), width: 1200, height: 630 },
-  { html: mark(512), file: join(root, "public/icon-512.png"), width: 512, height: 512 },
-  { html: mark(192), file: join(root, "public/icon-192.png"), width: 192, height: 192 },
-  { html: mark(180), file: join(root, "public/apple-touch-icon.png"), width: 180, height: 180 },
-  { html: mark(48), file: join(dir, "icon-48.png"), width: 48, height: 48 },
-  { html: mark(32), file: join(dir, "icon-32.png"), width: 32, height: 32 },
-  { html: mark(16), file: join(dir, "icon-16.png"), width: 16, height: 16 },
+  ...cards.map((item) => ({ html: cardHtml(item), file: join(root, item.file), width: 1200, height: 630 })),
+  ...(cardsOnly ? [] : [
+    { html: mark(512), file: join(root, "public/icon-512.png"), width: 512, height: 512 },
+    { html: mark(192), file: join(root, "public/icon-192.png"), width: 192, height: 192 },
+    { html: mark(180), file: join(root, "public/apple-touch-icon.png"), width: 180, height: 180 },
+    { html: mark(48), file: join(dir, "icon-48.png"), width: 48, height: 48 },
+    { html: mark(32), file: join(dir, "icon-32.png"), width: 32, height: 32 },
+    { html: mark(16), file: join(dir, "icon-16.png"), width: 16, height: 16 },
+  ]),
 ];
 
 for (const job of jobs) {
@@ -128,9 +137,11 @@ for (const job of jobs) {
   console.log(job.file, size);
 }
 
-const ico = icoFromPngs([16, 32, 48].map((size) => ({
-  size,
-  buffer: readFileSync(join(dir, `icon-${size}.png`)),
-})));
-writeFileSync(join(root, "public/favicon.ico"), ico);
-console.log("favicon.ico", ico.length);
+if (!cardsOnly) {
+  const ico = icoFromPngs([16, 32, 48].map((size) => ({
+    size,
+    buffer: readFileSync(join(dir, `icon-${size}.png`)),
+  })));
+  writeFileSync(join(root, "public/favicon.ico"), ico);
+  console.log("favicon.ico", ico.length);
+}

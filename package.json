@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && node scripts/sitemap.mjs && vite build",
+    "build": "tsc --noEmit && node scripts/write-html.ts && vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "dict:build": "node scripts/build-dict.mjs"

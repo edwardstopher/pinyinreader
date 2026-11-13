@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinese Reader with Pinyin and a Dictionary | PinyinMe</title>
+    <meta name="description" content="Paste Chinese and read it with pinyin and CC-CEDICT definitions. Your texts stay in this browser. There is no account.">
+    <link rel="canonical" href="https://www.pinyinme.com/chinese-reader-with-dictionary">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#f7f4ee">
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.pinyinme.com/chinese-reader-with-dictionary">
+    <meta property="og:title" content="Chinese Reader with Pinyin and a Dictionary | PinyinMe">
+    <meta property="og:description" content="Paste Chinese and read it with pinyin and CC-CEDICT definitions. Your texts stay in this browser. There is no account.">
+    <meta property="og:site_name" content="PinyinMe">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:image" content="https://www.pinyinme.com/og-chinese-reader.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="PinyinMe card for the reader, with 银行 yínháng and 行走 xíngzǒu.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://www.pinyinme.com/chinese-reader-with-dictionary">
+    <meta name="twitter:title" content="Chinese Reader with Pinyin and a Dictionary | PinyinMe">
+    <meta name="twitter:description" content="Paste Chinese and read it with pinyin and CC-CEDICT definitions. Your texts stay in this browser. There is no account.">
+    <meta name="twitter:image" content="https://www.pinyinme.com/og-chinese-reader.png">
+    <meta name="twitter:image:alt" content="PinyinMe card for the reader, with 银行 yínháng and 行走 xíngzǒu.">
+    <script>
+      try {
+        var saved = JSON.parse(localStorage.getItem("pinyinme.v1") || "null");
+        var theme = saved && saved.settings && saved.settings.theme;
+        if (theme !== "light" && theme !== "dark" && theme !== "sepia" && theme !== "contrast") {
+          theme = localStorage.getItem("theme");
+        }
+        if (theme !== "light" && theme !== "dark" && theme !== "sepia" && theme !== "contrast") {
+          theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.dataset.theme = theme;
+        var themeColor = theme === "dark" ? "#141210" : theme === "contrast" ? "#000000" : theme === "sepia" ? "#f3ead7" : "#f7f4ee";
+        var themeMeta = document.querySelector('meta[name="theme-color"]');
+        if (themeMeta) themeMeta.setAttribute("content", themeColor);
+      } catch (e) {}
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.pinyinme.com/#organization",
+      "name": "PinyinMe",
+      "url": "https://www.pinyinme.com",
+      "logo": "https://www.pinyinme.com/icon-512.png"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.pinyinme.com/#website",
+      "name": "PinyinMe",
+      "url": "https://www.pinyinme.com",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://www.pinyinme.com/#organization"
+      }
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.pinyinme.com/chinese-reader-with-dictionary#app",
+      "name": "PinyinMe",
+      "url": "https://www.pinyinme.com/chinese-reader-with-dictionary",
+      "description": "Paste Chinese and read it with pinyin and CC-CEDICT definitions. Your texts stay in this browser. There is no account.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "featureList": [
+        "Word-level pinyin above, below, or beside Chinese characters",
+        "Hover and click definitions from CC-CEDICT",
+        "Hide pinyin by HSK 2.0 or HSK 3.0 level",
+        "Simplified and traditional Chinese conversion",
+        "Printable reading handouts"
+      ],
+      "screenshot": "https://www.pinyinme.com/og-chinese-reader.png",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@id": "https://www.pinyinme.com/#organization"
+      }
+    }
+  ]
+}
+    </script>
+</head>
+<body>
+    <a class="skip no-print" href="#reader">Skip to reading</a>
+    <main id="page" aria-label="Read your own text with a dictionary">
+    <div id="root"></div>
+    <details class="seo no-print">
+      <summary>Chinese reader — pinyin on the words and a definition when you open one</summary>
+      <article class="seo-body">
+        <h1 id="page-title">Read your own text with a dictionary</h1>
+        <p class="lede">This is a Chinese reader for text you bring yourself. Paste a passage, get word-level pinyin, and open a short English definition when you need it. There is no feed of articles, no account, and no progress score. The sample above is only a starting point: a few lines with words worth opening, including 生词 and 词典. Replace it with the page, chat, or chapter you actually want to read.</p>
+<p>Definitions come from CC-CEDICT, the 12 November 2026 release, with HSK levels and frequency ranks added on top. The dictionary data stays under CC BY-SA 4.0. On a wide screen the definition sits in a side panel. On a narrow screen it opens as a sheet. This page sets the trigger to hover on a device that can hover, and a tap still works. Phones use the tap. Style can switch the trigger back to click only.</p>
+<h2>How to read a text</h2>
+<ol>
+  <li>Open Text and paste. Annotate with Pinyin, or press Shift+Enter, to close the editor and stay in the reading view.</li>
+  <li>Move through the words with the mouse or with the arrow keys. Enter or a click opens the definition. On a phone, tap the word and the sheet opens.</li>
+  <li>Save the text in the library if you want it later on this device. Import a .txt or .md file if the passage is already a file.</li>
+</ol>
+<h2>What you see when a word opens</h2>
+<p>The panel shows the word, the other script when simplified and traditional differ, the reading, and the HSK level for the syllabus you selected. If the word is on a frequency list, the rank is there too. A lower rank is more frequent. Senses are the CC-CEDICT glosses, and measure words are listed when the entry has them. Other readings are buttons. Choose one for this occurrence, or tick the box to apply it every time that word appears in the text.</p>
+<p>If the dictionary is still loading, the panel says so. Readings are already on the text. After the first download, the file stays in this browser, so later lookups work offline. The first visit needs a connection. A word with no entry still has a reading, and the panel says the gloss is missing.</p>
+<h2>What this reader is not</h2>
+<p>It is not a course, and it does not choose your next text or track what you have read. You bring the paragraph. The tool annotates it in this browser and forgets it if you clear site data.</p>
+<p>You can hide pinyin up to an HSK level while you read, which is the idea on the <a href="/hsk-pinyin">HSK pinyin</a> page. You can print the passage, which is the idea on the <a href="/pinyin-for-printing">print page</a>. You can switch script, which is the idea on the <a href="/traditional-chinese-pinyin">traditional</a> page. Listening uses a Chinese voice from the browser. If none is installed, the play buttons stay unavailable. There is no Zhuyin and no handwriting practice.</p>
+<h2>Example</h2>
+<p class="example">Open <ruby lang="zh-Hans">生词<rt lang="zh-Latn">shēngcí</rt></ruby> in the sample. The gloss is a new or unfamiliar word. <ruby lang="zh-Hans">词典<rt lang="zh-Latn">cídiǎn</rt></ruby> is “dictionary”. The reading is on the word either way. The gloss appears when the dictionary has loaded and you open the word.</p>
+<p>If the side panel says the dictionary is still loading, wait a moment and open the word again. The status line in the toolbar moves from a download message to “Dictionary ready”. After that, the same word should show its senses without another download.</p>
+<h2>Questions</h2>
+<h3>Does hover work on a phone?</h3>
+<p>No. A phone opens the dictionary when you tap. Hover is for a fine pointer.</p>
+<h3>Are the definitions edited for learners?</h3>
+<p>They are CC-CEDICT glosses, plus the HSK and frequency fields added in this copy. They are short, and they can be technical. They are not rewritten as a textbook.</p>
+<h3>Can someone else open my text?</h3>
+<p>Not from PinyinMe. There is no share link and no account. The text is on your device. A shareable link would be a later feature, and it is not in this version.</p>
+<h3>What if I disagree with a reading?</h3>
+<p>Open the word and choose another one. You can apply it once or everywhere that word appears in this text. You cannot invent a spelling the dictionary and the pinyin library do not list.</p>
+        <h2>More on PinyinMe</h2>
+        <nav class="page-nav" aria-label="Pages">
+      <a href="/">Home</a>
+      <a href="/chinese-to-pinyin">Chinese to pinyin</a>
+      <a href="/pinyin-for-printing">Printing</a>
+      <a href="/hsk-pinyin">HSK pinyin</a>
+      <a href="/traditional-chinese-pinyin">Traditional</a>
+      <a href="/chinese-reader-with-dictionary" aria-current="page">Reader</a>
+    </nav>
+      </article>
+    </details>
+    </main>
+    <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

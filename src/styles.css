@@ -137,6 +137,12 @@ a { color: var(--accent); }
 }
 .brand { display: flex; align-items: baseline; gap: 10px; margin-right: auto; }
 .logo { margin: 0; font-weight: 650; letter-spacing: -0.03em; font-size: 22px; }
+a.logo { color: var(--ink); text-decoration: none; }
+.site-links { display: flex; flex-wrap: wrap; gap: 4px 14px; flex-basis: 100%; }
+.site-links a { color: var(--muted); text-decoration: none; font-size: 13px; min-height: 44px; display: inline-flex; align-items: center; }
+.site-links a[aria-current="page"] { color: var(--ink); font-weight: 650; }
+.page-nav { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 8px 0 4px; }
+.foot .site-links { justify-content: center; }
 .logo span { color: var(--accent); font-family: "Iowan Old Style", Palatino, Georgia, serif; margin-right: 4px; }
 .tagline { margin: 0; color: var(--muted); font-size: 13px; }
 .script, .actions, .reader-toolbar, .dict-actions, .samples, .editor-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }

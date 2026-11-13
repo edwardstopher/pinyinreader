@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK Pinyin: Hide Readings by Level | PinyinMe</title>
+    <meta name="description" content="Hide pinyin for words up to an HSK 2.0 or HSK 3.0 level you choose, and tap a word when you want the reading back.">
+    <link rel="canonical" href="https://www.pinyinme.com/hsk-pinyin">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#f7f4ee">
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.pinyinme.com/hsk-pinyin">
+    <meta property="og:title" content="HSK Pinyin: Hide Readings by Level | PinyinMe">
+    <meta property="og:description" content="Hide pinyin for words up to an HSK 2.0 or HSK 3.0 level you choose, and tap a word when you want the reading back.">
+    <meta property="og:site_name" content="PinyinMe">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:image" content="https://www.pinyinme.com/og-hsk-pinyin.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="PinyinMe card for HSK pinyin, with 银行 and 行走.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://www.pinyinme.com/hsk-pinyin">
+    <meta name="twitter:title" content="HSK Pinyin: Hide Readings by Level | PinyinMe">
+    <meta name="twitter:description" content="Hide pinyin for words up to an HSK 2.0 or HSK 3.0 level you choose, and tap a word when you want the reading back.">
+    <meta name="twitter:image" content="https://www.pinyinme.com/og-hsk-pinyin.png">
+    <meta name="twitter:image:alt" content="PinyinMe card for HSK pinyin, with 银行 and 行走.">
+    <script>
+      try {
+        var saved = JSON.parse(localStorage.getItem("pinyinme.v1") || "null");
+        var theme = saved && saved.settings && saved.settings.theme;
+        if (theme !== "light" && theme !== "dark" && theme !== "sepia" && theme !== "contrast") {
+          theme = localStorage.getItem("theme");
+        }
+        if (theme !== "light" && theme !== "dark" && theme !== "sepia" && theme !== "contrast") {
+          theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.dataset.theme = theme;
+        var themeColor = theme === "dark" ? "#141210" : theme === "contrast" ? "#000000" : theme === "sepia" ? "#f3ead7" : "#f7f4ee";
+        var themeMeta = document.querySelector('meta[name="theme-color"]');
+        if (themeMeta) themeMeta.setAttribute("content", themeColor);
+      } catch (e) {}
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.pinyinme.com/#organization",
+      "name": "PinyinMe",
+      "url": "https://www.pinyinme.com",
+      "logo": "https://www.pinyinme.com/icon-512.png"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.pinyinme.com/#website",
+      "name": "PinyinMe",
+      "url": "https://www.pinyinme.com",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://www.pinyinme.com/#organization"
+      }
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.pinyinme.com/hsk-pinyin#app",
+      "name": "PinyinMe",
+      "url": "https://www.pinyinme.com/hsk-pinyin",
+      "description": "Hide pinyin for words up to an HSK 2.0 or HSK 3.0 level you choose, and tap a word when you want the reading back.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "featureList": [
+        "Word-level pinyin above, below, or beside Chinese characters",
+        "Hover and click definitions from CC-CEDICT",
+        "Hide pinyin by HSK 2.0 or HSK 3.0 level",
+        "Simplified and traditional Chinese conversion",
+        "Printable reading handouts"
+      ],
+      "screenshot": "https://www.pinyinme.com/og-hsk-pinyin.png",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@id": "https://www.pinyinme.com/#organization"
+      }
+    }
+  ]
+}
+    </script>
+</head>
+<body>
+    <a class="skip no-print" href="#reader">Skip to reading</a>
+    <main id="page" aria-label="Hide pinyin up to an HSK level">
+    <div id="root"></div>
+    <details class="seo no-print">
+      <summary>HSK pinyin — hide readings you know and keep the harder words</summary>
+      <article class="seo-body">
+        <h1 id="page-title">Hide pinyin up to an HSK level</h1>
+        <p class="lede">HSK pinyin here means a filter, not a course. You choose a level, and readings at or below that level drop away. Harder words keep their pinyin. Tap a hidden word when you want it back. The lists are HSK 2.0, with six levels, or HSK 3.0, the 2026 bands, where band 7 covers levels 7–9. This page opens with HSK 2.0 and “hide up to HSK 2” already set, on a short sample.</p>
+<p>The sample is 今天天气很好。我去银行，然后看报纸上的文章。 On the HSK 2.0 lists, 今天, 天气, 我, 去, 看, and 报纸 are level 1 or 2, so their readings start hidden. 银行 is level 3 and 文章 is level 4, so those readings stay. 然后 is level 3 and stays as well. A word with no HSK 2.0 level is never hidden by this control. That is a property of the list, not a judgement that the word is easy.</p>
+<h2>How to use the filter</h2>
+<ol>
+  <li>Pick HSK 2.0 or HSK 3.0 in Style. The toolbar’s “Hide pinyin up to” follows the list you picked. HSK 3.0 stops at band 7.</li>
+  <li>Choose a level. “Show all” turns the filter off. A level hides words at that level and below, and leaves higher words, and unlisted words, visible.</li>
+  <li>Tap a hidden word to reveal that one spot. Hide it again from the dictionary panel if you want the reading gone.</li>
+</ol>
+<h2>What the levels are, and what they are not</h2>
+<p>The levels come from the complete-hsk-vocabulary compilation. HSK 2.0 follows the older six-level lists. HSK 3.0 follows the newest bands in that compilation. Frequency ranks in the same compilation trace back to a BCC/BLCU list. You can also hide the most frequent words, separate from HSK, using the frequency control in Style. None of this is an official score, and it will not match every textbook’s private list.</p>
+<p>Switching list changes which number is attached to a word. 中文 is HSK 4 on the 2.0 list and HSK 1 on the 3.0 list in this data. If a word suddenly shows or hides after you change syllabus, that is the list changing, not the tool forgetting your setting. The number on the word, when you open it, is the level for the syllabus currently selected.</p>
+<h2>Reading without leaning on every reading</h2>
+<p>The useful case is a text that is a little hard. Hiding the band you believe you know leaves a trail on the words you do not. If a hidden word was not actually known, one tap shows it. The <a href="/chinese-to-pinyin">Chinese to pinyin</a> page is the general converter, if you want every reading on first.</p>
+<p>You can print in this state. Hidden words stay quiet on the paper unless you revealed them. The <a href="/pinyin-for-printing">print page</a> describes the sheet itself. The filter does not remove the characters, and it does not rewrite the text into a graded reader. It only decides which readings are drawn.</p>
+<h2>Example</h2>
+<p class="example">With hide-up-to-HSK-2 on the 2.0 list, <ruby lang="zh-Hans">银行<rt lang="zh-Latn">yínháng</rt></ruby> keeps its reading (HSK 3) and <ruby lang="zh-Hans">今天<rt lang="zh-Latn">jīntiān</rt></ruby> starts hidden (HSK 1).</p>
+<p>Open the sample and look at the toolbar. It should already say HSK 2, not “Show all”. Change it to Show all and the quiet words come back. Put it back and they go quiet again, except any word you revealed by tapping. Reveals are stored with the text, in this browser.</p>
+<h2>Questions</h2>
+<h3>Which list should I pick?</h3>
+<p>Use 2.0 if your book or class still quotes the six levels. Use 3.0 if you are following the newer bands. You can switch. The tool does not mix the two numbering systems on one word.</p>
+<h3>Why did an easy word keep its pinyin?</h3>
+<p>It is not on the list you selected, or its level is above the cutoff. 汉字, for example, has an HSK 3.0 level in this data and no HSK 2.0 level, so the 2.0 filter will not hide it.</p>
+<h3>Does hiding pinyin hide the definition?</h3>
+<p>No. Click or tap the word and the dictionary still opens. The filter only affects the reading drawn on the text.</p>
+<h3>Can I hide by frequency instead?</h3>
+<p>Yes, in Style. A frequency cutoff hides common words by rank. It is separate from the HSK control, and both can be on at once.</p>
+<h3>Is this an HSK exam?</h3>
+<p>No. There are no questions, no score, and no account. It is a display filter for texts you supply.</p>
+        <h2>More on PinyinMe</h2>
+        <nav class="page-nav" aria-label="Pages">
+      <a href="/">Home</a>
+      <a href="/chinese-to-pinyin">Chinese to pinyin</a>
+      <a href="/pinyin-for-printing">Printing</a>
+      <a href="/hsk-pinyin" aria-current="page">HSK pinyin</a>
+      <a href="/traditional-chinese-pinyin">Traditional</a>
+      <a href="/chinese-reader-with-dictionary">Reader</a>
+    </nav>
+      </article>
+    </details>
+    </main>
+    <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>
