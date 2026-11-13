@@ -6,6 +6,8 @@ Live site: [www.pinyinme.com](https://www.pinyinme.com)
 
 ## Develop
 
+Node.js 26 (`engines.node` is `26.x`, which is what Vercel uses for the build).
+
 ```bash
 npm install
 npm test
