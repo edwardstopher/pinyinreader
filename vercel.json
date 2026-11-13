@@ -1,0 +1,12 @@
+{
+  "headers": [
+    {
+      "source": "/dict/meta.json",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=300" }]
+    },
+    {
+      "source": "/dict/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+    }
+  ]
+}

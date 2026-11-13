@@ -1,0 +1,9 @@
+{
+  "version": "2026-11-12",
+  "cedictDate": "2026-11-12T01:39:22Z",
+  "cedictEntries": 125408,
+  "hskSource": "drkameleon/complete-hsk-vocabulary@7ac65bf1a6387d35f1ade478906172a19311c7f9",
+  "file": "/dict/cedict.txt.gz",
+  "lines": 124288,
+  "hskOnly": 30
+}
