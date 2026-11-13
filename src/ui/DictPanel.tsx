@@ -1,47 +1,14 @@
-import { useMemo, useState } from "react";
-import { polyphonic } from "pinyin-pro";
+import { useState } from "react";
 import { formatClassifier, splitClassifiers } from "../dict/format";
-import type { Dictionary, Entry } from "../dict/types";
+import type { DictView } from "../dict/readings";
 import { hskLevel } from "../pipeline/hsk";
-import { alignReading, joinReading, readingKey } from "../pipeline/pinyin";
+import { readingKey } from "../pipeline/pinyin";
 import type { WordToken } from "../pipeline/types";
 import type { HskSyllabus } from "../model";
 
-export function readingsFor(token: WordToken, dict: Dictionary | null): { pinyin: string; label: string }[] {
-  const map = new Map<string, string>();
-  const add = (pinyin: string) => {
-    const key = readingKey(pinyin);
-    if (key && !map.has(key)) map.set(key, pinyin);
-  };
-  if (dict) {
-    for (const id of token.entryIds) {
-      const entry = dict.entries[id];
-      if (entry) add(entry.pinyin);
-    }
-    for (const entry of dict.lookup(token.text) ?? []) add(entry.pinyin);
-  }
-  if ([...token.text].length === 1) {
-    const rows = polyphonic(token.text, { type: "array", toneType: "num" }) as string[][];
-    for (const item of rows[0] ?? []) add(item);
-  }
-  const current = token.slots
-    .flatMap((slot) => (slot.syl ? [`${slot.syl.base}${slot.syl.tone}`, ...(slot.syl.erhua ? ["r5"] : [])] : []))
-    .join(" ");
-  if (current) add(current);
-  return [...map.values()].map((pinyin) => {
-    const slots = alignReading([...token.text], pinyin);
-    return { pinyin, label: slots ? joinReading(slots, "marks") : pinyin };
-  });
-}
-
-function entryPinyin(entry: Entry, surface: string): string {
-  const slots = alignReading([...surface], entry.pinyin);
-  return slots ? joinReading(slots, "marks") : entry.pinyin;
-}
-
 export function DictBody({
   token,
-  dict,
+  view,
   syllabus,
   onListen,
   onSentence,
@@ -51,7 +18,7 @@ export function DictBody({
   masked,
 }: {
   token: WordToken;
-  dict: Dictionary | null;
+  view: DictView | null;
   syllabus: HskSyllabus;
   onListen: () => void;
   onSentence: () => void;
@@ -61,23 +28,12 @@ export function DictBody({
   masked: boolean;
 }) {
   const [everywhere, setEverywhere] = useState(false);
-  const entries = useMemo(() => {
-    const ids = token.entryIds.length > 0 ? token.entryIds : dict?.ids(token.text) ?? [];
-    const list = ids.map((id) => dict?.entries[id]).filter((entry): entry is Entry => entry != null);
-    const chosen = token.chosenEntry;
-    return [...list].sort((a, b) => {
-      const ai = dict?.entries.indexOf(a) ?? 0;
-      const bi = dict?.entries.indexOf(b) ?? 0;
-      if (ai === chosen) return -1;
-      if (bi === chosen) return 1;
-      return 0;
-    });
-  }, [dict, token]);
-  const primary = entries[0];
+  const readings = view?.readings ?? [];
+  const blocks = view?.blocks ?? [];
+  const primary = blocks[0];
   const level = hskLevel(token, syllabus);
-  const readings = useMemo(() => (dict ? readingsFor(token, dict) : []), [dict, token]);
   const current = readings.find((item) => readingKey(item.pinyin) === readingKey(currentNumeric(token))) ?? readings[0];
-  const chars = [...token.text];
+  const chars = view?.characters ?? [...token.text].map((ch) => ({ ch, rows: [] }));
 
   return (
     <div className="dict-body">
@@ -121,8 +77,8 @@ export function DictBody({
           </div>
         </fieldset>
       ) : null}
-      {!dict ? <p className="dict-note">The dictionary is still loading. Readings use the built-in pinyin data for now.</p> : null}
-      {dict && entries.length === 0 ? <p className="dict-note">No CC-CEDICT entry for this form. The reading comes from the pinyin library.</p> : null}
+      {!view?.ready ? <p className="dict-note">The dictionary is still loading. Readings use the built-in pinyin data for now.</p> : null}
+      {view?.ready && blocks.length === 0 ? <p className="dict-note">No CC-CEDICT entry for this form. The reading comes from the pinyin library.</p> : null}
       {primary && primary.senses.length === 0 && (primary.hsk2 || primary.hsk3) ? (
         <p className="dict-note">This word is on an HSK list. CC-CEDICT has no definition for it.</p>
       ) : null}
@@ -143,24 +99,24 @@ export function DictBody({
           ) : null}
         </>
       ) : null}
-      {entries.slice(1).length > 0 ? (
+      {blocks.slice(1).length > 0 ? (
         <div className="other-entries">
-          {entries.slice(1).map((entry, index) => (
+          {blocks.slice(1).map((block, index) => (
             <details key={index}>
               <summary>
-                {entryPinyin(entry, token.text)}
+                {block.pinyinLabel}
                 <button
                   type="button"
                   onClick={(event) => {
                     event.preventDefault();
-                    onCorrect(entry.pinyin, everywhere ? "all" : "one");
+                    onCorrect(block.pinyin, everywhere ? "all" : "one");
                   }}
                 >
                   Use this reading
                 </button>
               </summary>
               <ol className="senses">
-                {entry.senses.map((sense, senseIndex) => (
+                {block.senses.map((sense, senseIndex) => (
                   <li key={senseIndex}>{sense}</li>
                 ))}
               </ol>
@@ -171,20 +127,17 @@ export function DictBody({
       {chars.length > 1 ? (
         <section className="breakdown">
           <h3>Characters</h3>
-          {chars.map((ch, index) => {
-            const list = (dict?.lookup(ch) ?? []).slice(0, 3);
-            return (
-              <div key={`${ch}${index}`}>
-                <strong>{ch}</strong>
-                {list.length === 0 ? <p>No entry</p> : list.map((entry, entryIndex) => (
-                  <p key={entryIndex}>
-                    <span className="mini-py">{entryPinyin(entry, ch)}</span>
-                    {entry.senses[0] ? ` ${entry.senses[0]}` : ""}
-                  </p>
-                ))}
-              </div>
-            );
-          })}
+          {chars.map((item, index) => (
+            <div key={`${item.ch}${index}`}>
+              <strong>{item.ch}</strong>
+              {item.rows.length === 0 ? <p>No entry</p> : item.rows.map((row, rowIndex) => (
+                <p key={rowIndex}>
+                  <span className="mini-py">{row.pinyin}</span>
+                  {row.sense ? ` ${row.sense}` : ""}
+                </p>
+              ))}
+            </div>
+          ))}
         </section>
       ) : null}
       <p className="credit">Definitions from CC-CEDICT, used under CC BY-SA 4.0.</p>

@@ -1,5 +1,4 @@
-import { parseDict } from "./parse";
-import type { DictMeta, Dictionary } from "./types";
+import type { DictMeta } from "./types";
 import { readDictCache, writeDictCache } from "../storage";
 
 async function decodeDict(buffer: ArrayBuffer): Promise<string> {
@@ -12,19 +11,8 @@ async function decodeDict(buffer: ArrayBuffer): Promise<string> {
   return new Response(stream).text();
 }
 
-let dictionaryPromise: Promise<Dictionary> | null = null;
-
-export function loadDictionary(onStatus: (message: string) => void): Promise<Dictionary> {
-  if (!dictionaryPromise) {
-    dictionaryPromise = fetchDictionary(onStatus).catch((error) => {
-      dictionaryPromise = null;
-      throw error;
-    });
-  }
-  return dictionaryPromise;
-}
-
-async function fetchDictionary(onStatus: (message: string) => void): Promise<Dictionary> {
+/** Download or reuse the cached dictionary text. Parsing happens in the worker. */
+export async function dictionaryText(onStatus: (message: string) => void): Promise<string> {
   onStatus("Loading dictionary…");
   let meta: DictMeta | null = null;
   try {
@@ -36,12 +24,10 @@ async function fetchDictionary(onStatus: (message: string) => void): Promise<Dic
   const cached = await readDictCache().catch(() => null);
   if (cached && (!meta || cached.version === meta.version)) {
     onStatus("Preparing dictionary…");
-    await wait();
-    onStatus("Dictionary ready");
-    return parseDict(cached.text);
+    return cached.text;
   }
   if (!meta) {
-    if (cached) return parseDict(cached.text);
+    if (cached) return cached.text;
     throw new Error("The dictionary could not be downloaded.");
   }
   try {
@@ -51,18 +37,9 @@ async function fetchDictionary(onStatus: (message: string) => void): Promise<Dic
     const text = await decodeDict(await response.arrayBuffer());
     await writeDictCache(meta.version, text).catch(() => undefined);
     onStatus("Preparing dictionary…");
-    await wait();
-    onStatus("Dictionary ready");
-    return parseDict(text);
+    return text;
   } catch (error) {
-    if (cached) {
-      onStatus("Dictionary ready");
-      return parseDict(cached.text);
-    }
+    if (cached) return cached.text;
     throw error;
   }
-}
-
-function wait(): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, 0));
 }

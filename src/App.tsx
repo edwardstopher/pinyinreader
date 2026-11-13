@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import type { DictView } from "./dict/readings";
 import { flushSync } from "react-dom";
 import { toneColors } from "./theme";
 import { showPinyin } from "./pipeline/hsk";
@@ -40,6 +41,7 @@ export function App() {
   const [playing, setPlaying] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [printMode, setPrintMode] = useState(false);
+  const [view, setView] = useState<{ start: number; view: DictView } | null>(null);
   const hoverTimer = useRef(0);
 
   const closeLibrary = useCallback(() => setLibraryOpen(false), []);
@@ -106,7 +108,20 @@ export function App() {
   const presetStyle = app.presets.find((item) => item.id === app.settings.print.presetId)?.style;
   const style: StyleSettings = printMode && presetStyle ? presetStyle : app.settings;
   const selectedToken = app.tokens.find((token): token is WordToken => isWord(token) && token.start === selected) ?? null;
+
+  useEffect(() => {
+    if (!selectedToken) return;
+    const start = selectedToken.start;
+    let cancel = false;
+    void app.describe(selectedToken).then((next) => {
+      if (!cancel) setView({ start, view: next });
+    });
+    return () => {
+      cancel = true;
+    };
+  }, [selectedToken, app.dictGeneration, app.describe]);
   const panel = app.settings.dictPinned && !narrow;
+  const dictView = view && selectedToken && view.start === selectedToken.start ? view.view : null;
   const masked = selectedToken
     ? style.position !== "hidden" && !showPinyin(selectedToken, {
       hskHide: style.hskHide,
@@ -125,6 +140,7 @@ export function App() {
   };
 
   const select = (token: WordToken, element: HTMLElement, revealWord = true) => {
+    void app.ensureDict();
     const hide = app.settings.position !== "hidden" && !showPinyin(token, {
       hskHide: app.settings.hskHide,
       syllabus: app.settings.hskSyllabus,
@@ -224,7 +240,6 @@ export function App() {
 
   return (
     <div className="app">
-      <a className="skip no-print" href="#reader">Skip to reading</a>
       <header className="top no-print">
         <div className="brand">
           <p className="logo"><span aria-hidden="true">ā</span> PinyinMe</p>
@@ -243,7 +258,7 @@ export function App() {
           <button type="button" onClick={() => setAboutOpen(true)}>About</button>
         </nav>
       </header>
-      <div className="ad-region" hidden data-ad-slot="reserved">Reserved for a future ad. Hidden in print.</div>
+      <div className="ad-region" hidden data-ad-slot="reserved" />
       <div className={`workspace${panel ? " with-panel" : ""}`}>
         <div className="column">
           {editorOpen && app.doc ? (
@@ -305,8 +320,10 @@ export function App() {
               anchor={app.doc.anchor}
               forceAll={printMode}
               scriptLang={app.script === "t" ? "zh-Hant" : "zh-Hans"}
+              hasText={app.doc.text.length > 0}
               onSelect={select}
               onHover={(token, element) => {
+                void app.ensureDict();
                 if (!canHover || app.settings.dictTrigger !== "hover") return;
                 window.clearTimeout(hoverTimer.current);
                 hoverTimer.current = window.setTimeout(() => select(token, element, false), 280);
@@ -321,9 +338,10 @@ export function App() {
         </div>
         {panel ? (
           <aside className="dock no-print" aria-label="Dictionary">
+            <h2 className="sr-only">Dictionary</h2>
             {selectedToken ? <DictBody
               token={selectedToken}
-              dict={app.dict}
+              view={dictView}
               syllabus={style.hskSyllabus}
               masked={masked}
               onListen={() => play([{ text: selectedToken.text, sentence: selectedToken.sentence }])}
@@ -346,7 +364,7 @@ export function App() {
           <button type="button" className="close-pop" onClick={() => setPopover(null)} aria-label="Close definition">Close</button>
           <DictBody
             token={selectedToken}
-            dict={app.dict}
+            view={dictView}
             syllabus={app.settings.hskSyllabus}
             masked={masked}
             onListen={() => play([{ text: selectedToken.text, sentence: selectedToken.sentence }])}
@@ -367,7 +385,7 @@ export function App() {
             <button type="button" onClick={() => setSheet(false)}>Close</button>
             <DictBody
               token={selectedToken}
-              dict={app.dict}
+              view={dictView}
               syllabus={app.settings.hskSyllabus}
               masked={masked}
               onListen={() => play([{ text: selectedToken.text, sentence: selectedToken.sentence }])}

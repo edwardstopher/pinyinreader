@@ -1,7 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { loadDictionary } from "./dict/load";
-import type { Dictionary } from "./dict/types";
-import { annotateProgressive } from "./pipeline/annotate";
+import { annotateText, describeWord, loadEngineDict, onEngineDict, onEngineStatus } from "./engine";
+import type { DictView } from "./dict/readings";
 import type { Correction, Token, WordToken } from "./pipeline/types";
 import { detectScript, toSimplified, toTraditional, type Script } from "./convert";
 import {
@@ -24,8 +23,8 @@ type Api = {
   presets: Preset[];
   defaultPresetId: string;
   tokens: Token[];
-  dict: Dictionary | null;
   dictStatus: string;
+  dictGeneration: number;
   script: Script;
   updateText: (text: string) => void;
   flushText: () => void;
@@ -47,6 +46,8 @@ type Api = {
   reveal: (token: WordToken) => void;
   hidePinyin: (token: WordToken) => void;
   convertTo: (script: "s" | "t") => Promise<void>;
+  ensureDict: () => void;
+  describe: (token: WordToken) => Promise<DictView>;
 };
 
 const Ctx = createContext<Api | null>(null);
@@ -65,8 +66,8 @@ export function Provider({ children }: { children: ReactNode }) {
   const [presets, setPresets] = useState<Preset[]>(stored.presets);
   const [defaultPresetId, setDefaultPresetId] = useState(stored.defaultPresetId);
   const [tokens, setTokens] = useState<Token[]>([]);
-  const [dict, setDict] = useState<Dictionary | null>(null);
-  const [dictStatus, setDictStatus] = useState("Loading dictionary…");
+  const [dictStatus, setDictStatus] = useState("Readings are ready");
+  const [dictGeneration, setDictGeneration] = useState(0);
   const [ready, setReady] = useState(false);
   const [script, setScript] = useState<Script>("none");
   const pending = useRef<string | null>(null);
@@ -98,6 +99,10 @@ export function Provider({ children }: { children: ReactNode }) {
     persistDoc(next);
   }, [docId, persistDoc]);
 
+  const ensureDict = useCallback(() => {
+    loadEngineDict();
+  }, []);
+
   useEffect(() => {
     void loadDocs().then((list) => {
       const initial = list.length > 0 ? list : [welcomeDoc()];
@@ -105,8 +110,31 @@ export function Provider({ children }: { children: ReactNode }) {
       setDocId(initial[0]?.id ?? null);
       setReady(true);
     });
-    void loadDictionary(setDictStatus).then(setDict).catch(() => setDictStatus("Dictionary unavailable. Readings still work."));
   }, []);
+
+  useEffect(() => onEngineStatus(setDictStatus), []);
+
+  useEffect(() => onEngineDict(() => setDictGeneration((value) => value + 1)), []);
+
+  useEffect(() => {
+    const start = () => ensureDict();
+    let idle = 0;
+    let timer = 0;
+    const schedule = () => {
+      if (typeof window.requestIdleCallback === "function") {
+        idle = window.requestIdleCallback(start, { timeout: 2500 });
+      } else {
+        timer = window.setTimeout(start, 400);
+      }
+    };
+    if (document.readyState === "complete") schedule();
+    else window.addEventListener("load", schedule, { once: true });
+    return () => {
+      window.removeEventListener("load", schedule);
+      if (idle && typeof window.cancelIdleCallback === "function") window.cancelIdleCallback(idle);
+      window.clearTimeout(timer);
+    };
+  }, [ensureDict]);
 
   useEffect(() => {
     saveSettings(settings, presets, defaultPresetId);
@@ -117,12 +145,11 @@ export function Provider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!doc) return;
     const run = ++generation.current;
-    const options = { dict, grouping: settings.grouping, corrections: doc.corrections };
-    void annotateProgressive(doc.text, options, (next) => {
+    void annotateText(doc.text, { grouping: settings.grouping, corrections: doc.corrections }, (next) => {
       if (run === generation.current) setTokens(next);
     });
     setScript(detectScript(doc.text));
-  }, [doc?.text, doc?.corrections, doc?.id, dict, settings.grouping]);
+  }, [doc?.text, doc?.corrections, doc?.id, dictGeneration, settings.grouping]);
 
   const updateText = useCallback((text: string) => {
     pending.current = text;
@@ -156,8 +183,8 @@ export function Provider({ children }: { children: ReactNode }) {
     presets,
     defaultPresetId,
     tokens,
-    dict,
     dictStatus,
+    dictGeneration,
     script,
     updateText,
     flushText,
@@ -240,6 +267,8 @@ export function Provider({ children }: { children: ReactNode }) {
       if (!doc) return;
       updateCurrent({ revealed: doc.revealed.filter((item) => !(item.offset === token.start && item.text === token.text)) });
     },
+    ensureDict,
+    describe: describeWord,
     convertTo: async (target) => {
       flushText();
       const current = docsRef.current.find((item) => item.id === docId);
@@ -256,7 +285,7 @@ export function Provider({ children }: { children: ReactNode }) {
         updatedAt: Date.now(),
       });
     },
-  }), [ready, docs, doc, settings, presets, defaultPresetId, tokens, dict, dictStatus, script, updateText, flushText, updateCurrent, persistDoc, docId]);
+  }), [ready, docs, doc, settings, presets, defaultPresetId, tokens, dictStatus, dictGeneration, script, updateText, flushText, updateCurrent, persistDoc, docId, ensureDict]);
 
   return <Ctx.Provider value={api}>{children}</Ctx.Provider>;
 }
