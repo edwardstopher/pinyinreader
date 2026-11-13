@@ -2,7 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.pinyinme.com</loc>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
+    <lastmod>2026-11-13</lastmod>
+  </url>
+  <url>
+    <loc>https://www.pinyinme.com/chinese-to-pinyin</loc>
+    <lastmod>2026-11-13</lastmod>
+  </url>
+  <url>
+    <loc>https://www.pinyinme.com/pinyin-for-printing</loc>
+    <lastmod>2026-11-13</lastmod>
+  </url>
+  <url>
+    <loc>https://www.pinyinme.com/hsk-pinyin</loc>
+    <lastmod>2026-11-13</lastmod>
+  </url>
+  <url>
+    <loc>https://www.pinyinme.com/traditional-chinese-pinyin</loc>
+    <lastmod>2026-11-13</lastmod>
+  </url>
+  <url>
+    <loc>https://www.pinyinme.com/chinese-reader-with-dictionary</loc>
+    <lastmod>2026-11-13</lastmod>
   </url>
 </urlset>

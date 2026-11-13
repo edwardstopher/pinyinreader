@@ -46,6 +46,7 @@ export function Editor({
 
   return (
     <section className="editor no-print" aria-label="Text editor">
+      <h2 className="sr-only">Text</h2>
       <div className="editor-meta">
         <label>
           Title

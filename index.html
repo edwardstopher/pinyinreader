@@ -3,29 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PinyinMe — Free Chinese Pinyin Annotation Tool</title>
-    <meta name="description" content="Instantly annotate Chinese text with Pinyin tones. Free, fast, and easy to use — perfect for learners at any level.">
-    <meta name="keywords" content="pinyin annotation, Chinese reader, learn Chinese, pinyin tool, Chinese text pinyin, hanzi pinyin, Chinese pronunciation">
+    <title>Chinese to Pinyin Converter with Definitions &amp; Print | PinyinMe</title>
+    <meta name="description" content="Convert Chinese to pinyin with word-level readings, hover or click definitions, HSK-level pinyin, simplified or traditional characters, and print.">
     <link rel="canonical" href="https://www.pinyinme.com">
     <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#f7f4ee">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+    <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-
-    <!-- Open Graph -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.webmanifest">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.pinyinme.com">
-    <meta property="og:title" content="PinyinMe — Free Chinese Pinyin Annotation Tool">
-    <meta property="og:description" content="Instantly annotate Chinese text with Pinyin tones. Free, fast, and easy to use — perfect for learners at any level.">
+    <meta property="og:title" content="Chinese to Pinyin Converter with Definitions &amp; Print | PinyinMe">
+    <meta property="og:description" content="Convert Chinese to pinyin with word-level readings, hover or click definitions, HSK-level pinyin, simplified or traditional characters, and print.">
     <meta property="og:site_name" content="PinyinMe">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:image" content="https://www.pinyinme.com/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="PinyinMe showing 银行 yínháng and 行走 xíngzǒu, with pinyin above the characters.">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://www.pinyinme.com">
-    <meta name="twitter:title" content="PinyinMe — Free Chinese Pinyin Annotation Tool">
-    <meta name="twitter:description" content="Instantly annotate Chinese text with Pinyin tones. Free, fast, and easy to use — perfect for learners at any level.">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <meta name="twitter:title" content="Chinese to Pinyin Converter with Definitions &amp; Print | PinyinMe">
+    <meta name="twitter:description" content="Convert Chinese to pinyin with word-level readings, hover or click definitions, HSK-level pinyin, simplified or traditional characters, and print.">
+    <meta name="twitter:image" content="https://www.pinyinme.com/og-image.png">
+    <meta name="twitter:image:alt" content="PinyinMe showing 银行 yínháng and 行走 xíngzǒu, with pinyin above the characters.">
     <script>
       try {
         var saved = JSON.parse(localStorage.getItem("pinyinme.v1") || "null");
@@ -37,29 +40,120 @@
           theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
         }
         document.documentElement.dataset.theme = theme;
+        var themeColor = theme === "dark" ? "#141210" : theme === "contrast" ? "#000000" : theme === "sepia" ? "#f3ead7" : "#f7f4ee";
+        var themeMeta = document.querySelector('meta[name="theme-color"]');
+        if (themeMeta) themeMeta.setAttribute("content", themeColor);
       } catch (e) {}
     </script>
     <script defer src="/_vercel/insights/script.js"></script>
     <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
+      "@type": "Organization",
+      "@id": "https://www.pinyinme.com/#organization",
       "name": "PinyinMe",
       "url": "https://www.pinyinme.com",
-      "description": "Instantly annotate Chinese text with Pinyin tones. Free, fast, and easy to use — perfect for learners at any level.",
+      "logo": "https://www.pinyinme.com/icon-512.png"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.pinyinme.com/#website",
+      "name": "PinyinMe",
+      "url": "https://www.pinyinme.com",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://www.pinyinme.com/#organization"
+      }
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.pinyinme.com#app",
+      "name": "PinyinMe",
+      "url": "https://www.pinyinme.com",
+      "description": "Convert Chinese to pinyin with word-level readings, hover or click definitions, HSK-level pinyin, simplified or traditional characters, and print.",
       "applicationCategory": "EducationalApplication",
       "operatingSystem": "Any",
-      "inLanguage": "zh",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "featureList": [
+        "Word-level pinyin above, below, or beside Chinese characters",
+        "Hover and click definitions from CC-CEDICT",
+        "Hide pinyin by HSK 2.0 or HSK 3.0 level",
+        "Simplified and traditional Chinese conversion",
+        "Printable reading handouts"
+      ],
+      "screenshot": "https://www.pinyinme.com/og-image.png",
       "offers": {
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@id": "https://www.pinyinme.com/#organization"
       }
     }
+  ]
+}
     </script>
 </head>
 <body>
+    <a class="skip no-print" href="#reader">Skip to reading</a>
+    <main id="page" aria-label="Add pinyin to Chinese text">
     <div id="root"></div>
+    <details class="seo no-print">
+      <summary>Chinese to pinyin — how it works and common questions</summary>
+      <article class="seo-body">
+        <h1 id="page-title">Add pinyin to Chinese text</h1>
+        <p class="lede">PinyinMe is a Chinese to pinyin converter for self-study. Paste or type characters and each word keeps its own reading, with tone marks, instead of one long line of syllables under a paragraph. Click a word for a short English definition. Hide the pinyin you already know, switch between simplified and traditional, and print a handout. It is free. Your texts stay in this browser, and there is no account.</p>
+<h2>How to convert Chinese to pinyin</h2>
+<ol>
+  <li>Open Text and paste or type Chinese, or start from one of the samples. Shift+Enter, or Annotate with Pinyin, closes the editor and leaves the reading view.</li>
+  <li>Choose where the reading sits: above the characters, below them, inline, or hidden. Choose tone marks, tone numbers, or no tones.</li>
+  <li>Click a word to open the definition, the HSK level when one is listed, and any other readings. In Style you can switch that from click to hover. Print uses the browser’s print dialog, including Save as PDF.</li>
+</ol>
+<h2>What you can do</h2>
+<ul>
+  <li>Word-level readings. Spaces, line breaks, and text that is not Chinese stay where you put them. A long text is drawn in sections so a chapter does not lock the page.</li>
+  <li>Definitions from <a href="https://www.mdbg.net/chinese/dictionary?page=cc-cedict">CC-CEDICT</a>, including measure words. This copy is the 12 November 2026 release, with HSK levels and frequency ranks added. The dictionary data stays under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. About names the sources.</li>
+  <li>HSK-level pinyin. Hide readings at or below a level you pick, on the HSK 2.0 lists (1–6) or the HSK 3.0 lists (1–7, where band 7 covers levels 7–9). A word with no listed level stays visible. You can also hide the most frequent words. Tap a hidden word to show its reading again.</li>
+  <li>Simplified and traditional. The 简 and 繁 buttons rewrite the open text at word level. This is standard character conversion, not a separate Taiwan vocabulary list.</li>
+  <li>A correction when a reading is wrong for the sentence: change that one occurrence, or every time the word appears.</li>
+  <li>Listening, with a Chinese voice installed in the browser. Play the passage, a sentence, or a word. If this device has no Chinese voice, playback stays unavailable.</li>
+  <li>A library on this device. Save more than one text, import a .txt or .md file, and come back to the last reading position.</li>
+  <li>Print on A4 or US Letter, portrait or landscape, with margins, and with tone colors, grayscale, or underline patterns. The toolbar and this guide are left off the page.</li>
+</ul>
+<p>PinyinMe does not make handwriting worksheets, and it does not add Zhuyin. Tone sandhi for 一 and 不 is left off, so you see the citation tone.</p>
+<h2>A word with more than one reading</h2>
+<p class="example"><ruby lang="zh-Hans">银行<rt lang="zh-Latn">yínháng</rt></ruby> is “bank”. <ruby lang="zh-Hans">行走<rt lang="zh-Latn">xíngzǒu</rt></ruby> is “to walk”. The character 行 is háng in the first word and xíng in the second.</p>
+<p>A converter that paints one reading onto every 行 will miss one of those words. PinyinMe looks the word up. When the word itself has more than one reading, the dictionary lists the others and you can choose. The sample text on the desk includes 银行.</p>
+<h2>Questions</h2>
+<h3>Does this work offline?</h3>
+<p>Readings are produced in the browser, so they still show without a connection. Definitions come from a dictionary file that is saved on the device after the first download. After that, lookups work offline. The first visit needs a connection to fetch the dictionary.</p>
+<h3>Is there an account?</h3>
+<p>No. Texts, corrections, and settings are stored in this browser only. Clearing the site’s data removes them. There is no server copy of your texts.</p>
+<h3>Which HSK list does the filter use?</h3>
+<p>You choose HSK 2.0 or HSK 3.0 in Style. The levels come from the complete-hsk-vocabulary compilation: the older six-level lists, and the 2026 bands, where band 7 covers levels 7–9. Frequency ranks in that compilation trace back to a BCC/BLCU list. They are a way to hide common words, not an exam score.</p>
+<h3>Can I print only some of the pinyin?</h3>
+<p>Yes. Set “Hide pinyin up to” before you print. Words you have not revealed stay quiet on the page. Choosing a hidden position in Style turns readings off. In the browser’s print dialog, turn off its own headers and footers if you do not want its page-number line.</p>
+<h3>Why is a reading different from my textbook?</h3>
+<p>Some characters have several readings, and a name or a rare word may be missing from the dictionary. Open the word and pick another reading. A single character that the dictionary does not list still gets a reading from the pinyin library. 一 and 不 keep their citation tones, without the sandhi a textbook sometimes shows in running speech.</p>
+<h3>Can I reuse the dictionary?</h3>
+<p>The definitions are CC-CEDICT, licensed CC BY-SA 4.0. PinyinMe is a reading tool. Reusing the dictionary data means keeping that license. About names the exact release and the HSK source.</p>
+        <h2>More on PinyinMe</h2>
+        <nav class="page-nav" aria-label="Pages">
+      <a href="/" aria-current="page">Home</a>
+      <a href="/chinese-to-pinyin">Chinese to pinyin</a>
+      <a href="/pinyin-for-printing">Printing</a>
+      <a href="/hsk-pinyin">HSK pinyin</a>
+      <a href="/traditional-chinese-pinyin">Traditional</a>
+      <a href="/chinese-reader-with-dictionary">Reader</a>
+    </nav>
+      </article>
+    </details>
+    </main>
     <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>

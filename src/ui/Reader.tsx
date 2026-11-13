@@ -117,6 +117,7 @@ export function Reader({
   anchor,
   forceAll,
   scriptLang,
+  hasText,
   onSelect,
   onHover,
   onHoverEnd,
@@ -133,6 +134,7 @@ export function Reader({
   anchor: number;
   forceAll: boolean;
   scriptLang: string;
+  hasText: boolean;
   onSelect: (token: WordToken, element: HTMLElement) => void;
   onHover: (token: WordToken, element: HTMLElement) => void;
   onHoverEnd: () => void;
@@ -211,12 +213,13 @@ export function Reader({
       tabIndex={-1}
       aria-describedby="reader-help"
     >
+      <h2 className="sr-only">Reading</h2>
       <p id="reader-help" className="sr-only">
         Reading view. Use the arrow keys to move between words. Press Enter to open the dictionary.
       </p>
       <p className="print-legend">Tone underlines: 1 solid, 2 dotted, 3 dashed, 4 wavy. Neutral tone has no underline.</p>
       {tokens.length === 0 ? (
-        <p className="empty-read">Paste or type Chinese on the left, or open a saved text.</p>
+        <p className="empty-read">{hasText ? "Adding pinyin…" : "Paste or type Chinese on the left, or open a saved text."}</p>
       ) : (
         visible.map((paragraph, index) => (
           <p className={paragraph.length === 0 ? "para blank" : "para"} key={index} aria-hidden={paragraph.length === 0 ? true : undefined}>

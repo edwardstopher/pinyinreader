@@ -189,7 +189,7 @@ export function hanFontStack(font: HanFont): string {
 export function pyFontStack(font: PyFont): string {
   if (font === "serif") return '"Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif';
   if (font === "readable") return '"Atkinson Hyperlegible", Verdana, "Segoe UI", sans-serif';
-  return 'Inter, "Source Sans 3", system-ui, sans-serif';
+  return 'system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
 }
 
 export function emptyDoc(): Doc {
